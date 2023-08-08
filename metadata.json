@@ -1,9 +1,9 @@
 {
-    "Identifier": "",
-    "Slug": "",
-    "Status": "",
-    "Title": "",
-    "Description": "",
+    "Identifier": "eos7emx",
+    "Slug": "small-world-sampler",
+    "Status": "In progress",
+    "Title": "SmallWorld Sampler",
+    "Description": "SmallWorld is an index of chemical space containing more than 230B molecular substructures. SmallWorldSampler uses the Small World API to post a query to the SmallWorld server to sample smiles.",
     "Mode": "",
     "Task": [],
     "Input": [],
@@ -12,8 +12,11 @@
     "Output Type": [],
     "Output Shape": "",
     "Interpretation": "",
-    "Tag": [],
-    "Publication": "",
-    "Source Code": "",
-    "License": ""
+    "Tag": [
+        "Similarity",
+        "ZINC"
+    ],
+    "Publication": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3606195/",
+    "Source Code": "https://pypi.org/project/smallworld-api/",
+    "License": "MIT"
 }
