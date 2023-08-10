@@ -20,7 +20,7 @@ with open(input_file, "r") as f:
     smiles_list = [r[0] for r in reader]
 
 # run model
-outputs = =zinc_similarity(smiles_list)
+outputs = zinc_similarity(smiles_list)
 
 #check input and output have the same lenght
 input_len = len(smiles_list)
