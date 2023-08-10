@@ -3,15 +3,23 @@
     "Slug": "small-world-sampler",
     "Status": "In progress",
     "Title": "SmallWorld Sampler",
-    "Description": "SmallWorld is an index of chemical space containing more than 230B molecular substructures. SmallWorldSampler uses the Small World API to post a query to the SmallWorld server to sample smiles.",
-    "Mode": "",
-    "Task": [],
-    "Input": [],
-    "Input Shape": "",
-    "Output": [],
-    "Output Type": [],
-    "Output Shape": "",
-    "Interpretation": "",
+    "Description": "SmallWorld is an index of chemical space containing more than 230B molecular substructures. For this model we will use the zinc database to get the 10 most similar to a smile.",
+    "Mode": "Online",
+    "Input": [
+        "Compound"
+    ],
+    "Input Shape": "Single",
+    "Task": [
+        "Similarity"
+    ],
+    "Output": [
+        "Compound"
+    ],
+    "Output Type": [
+        "String"
+    ],
+    "Output Shape": "Flexible List",
+    "Interpretation": "List of 10 nearest neighbors",
     "Tag": [
         "Similarity",
         "ZINC"
@@ -19,4 +27,4 @@
     "Publication": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3606195/",
     "Source Code": "https://pypi.org/project/smallworld-api/",
     "License": "MIT"
-}
+}s
