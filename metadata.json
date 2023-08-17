@@ -3,7 +3,7 @@
     "Slug": "small-world-sampler",
     "Status": "In progress",
     "Title": "SmallWorld Sampler",
-    "Description": "SmallWorld is an index of chemical space containing more than 230B molecular substructures. For this model we will use the zinc database  to search for 10 similar molecules to a given molecules which does not contain it as the latter is filtered by Lipinski's rule of five.",
+    "Description": "SmallWorld is an index of chemical space containing more than 230B molecular substructures.SmallWorldSampler uses the Small World API to post a query to the SmallWorld server to sample 100 smiles within a distance of 10 for different maps and databases.",
     "Mode": "Online",
     "Input": [
         "Compound"
@@ -19,7 +19,7 @@
         "String"
     ],
     "Output Shape": "Flexible List",
-    "Interpretation": "List of 10 nearest neighbors",
+    "Interpretation": "List of 100 nearest smiles",
     "Tag": [
         "Similarity",
         "ZINC"
