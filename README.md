@@ -14,7 +14,7 @@ SmallWorld is an index of chemical space containing more than 230B molecular sub
 * Task: `Similarity`
 * Output: `Compound`
 * Output Type: `String`
-* Output Shape: `Flexible List`
+* Output Shape: `List`
 * Interpretation: List of 100 nearest smiles
 
 ## References
