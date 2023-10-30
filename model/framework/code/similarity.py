@@ -115,7 +115,10 @@ class SmallWorldSampler(object):
             if (t1 - t0) > time_budget_sec:
                 break
             t0 = time.time()
-        sampled_smiles = list(set(sampled_smiles))
+        can_smiles = []
+        for smi in sampled_smiles:
+            can_smiles += [Chem.MolToSmiles(Chem.MolFromSmiles(smi), True)]
+        sampled_smiles = list(set(can_smiles))
         return sampled_smiles
 
     def sample(self, smiles, time_budget_sec=360):
