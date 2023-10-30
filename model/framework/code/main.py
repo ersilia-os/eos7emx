@@ -20,16 +20,22 @@ with open(input_file, "r") as f:
 
 # run model
 sampler = SmallWorldSampler()
-outputs = sampler.sample(smiles_list)
+outputs = []
+for smiles in smiles_list:
+    outputs += [sampler.sample(smiles)]
 
-# check that at least the output is greater than the input.
+header = ["sim-{0}".format(i) for i in range(1000)]
+blank = [None] * len(header)
+R = []
+for o in outputs:
+    r = o + [None] * (len(header) - len(o))
+    R += [r]
+
 input_len = len(smiles_list)
 output_len = len(outputs)
-assert (input_len <= output_len)
 
-# write output in a .csv file
 with open(output_file, "w") as f:
     writer = csv.writer(f)
-    writer.writerow(["similarity"])  # header
-    for o in outputs:
-        writer.writerow(o)
+    writer.writerow(header)
+    for r in R:
+        writer.writerow(r)

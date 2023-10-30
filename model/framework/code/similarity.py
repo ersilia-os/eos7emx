@@ -1,14 +1,47 @@
+import sys
+import os
+
+ROOT = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(ROOT)
+
 import collections
 import urllib
 import json
-from tqdm import tqdm
 import time
-import random
 import pandas as pd
 from smallworld_api import SmallWorld
 import warnings
+from rdkit import Chem
+from rdkit import DataStructs
+from rdkit.Chem import AllChem
 
 warnings.filterwarnings("ignore")
+
+MAX_N_MOLECULES = 1000
+
+
+def calculate_similarity(ref_mol, mol_list):
+    # Calculate fingerprints for the reference molecule and molecule list
+    ref_fp = AllChem.GetMorganFingerprint(ref_mol, 2)
+    mol_fps = [AllChem.GetMorganFingerprint(mol, 2) for mol in mol_list]
+
+    # Calculate similarity between reference and each molecule in the list
+    similarities = [
+        DataStructs.TanimotoSimilarity(ref_fp, mol_fp) for mol_fp in mol_fps
+    ]
+
+    return similarities
+
+
+def sort_molecules_by_similarity(ref_mol, mol_list, top_n=MAX_N_MOLECULES):
+    similarities = calculate_similarity(ref_mol, mol_list)
+    # Pair each molecule with its similarity to the reference molecule
+    paired = list(zip(mol_list, similarities))
+    # Sort by similarity (descending)
+    sorted_mols = sorted(paired, key=lambda x: x[1], reverse=True)
+
+    # Return only the molecules (without the similarity values), limited to top_n
+    return [mol for mol, sim in sorted_mols][:top_n]
 
 
 def get_available_maps():
@@ -63,9 +96,8 @@ class SmallWorldSampler(object):
         self.sw = SmallWorld()
         self.dist = dist
         self.length = length
-        self.seconds_per_query = 3
 
-    def _sample(self, smiles, time_budget_sec):
+    def _sample(self, smiles, time_budget_sec=360):
         t0 = time.time()
         sampled_smiles = []
         for m in self.maps:
@@ -83,15 +115,15 @@ class SmallWorldSampler(object):
             if (t1 - t0) > time_budget_sec:
                 break
             t0 = time.time()
-            print('sampled', sampled_smiles)
+        sampled_smiles = list(set(sampled_smiles))
         return sampled_smiles
 
-    def sample(self, smiles_list, time_budget_sec=600):
-        time_budget_sec_per_query = (
-            int(time_budget_sec / (self.seconds_per_query * len(smiles_list))) + 1
-        )
-        sampled_smiles = []
-        for smi in tqdm(smiles_list):
-            sampled_smiles.append(self._sample(smi, time_budget_sec_per_query))
-        random.shuffle(sampled_smiles)
-        return sampled_smiles
+    def sample(self, smiles, time_budget_sec=360):
+        sampled_smiles = self._sample(smiles, time_budget_sec=time_budget_sec)
+        if len(sampled_smiles) == 0:
+            return []
+        mol_list = [Chem.MolFromSmiles(smi) for smi in sampled_smiles]
+        ref_mol = Chem.MolFromSmiles(smiles)
+        sorted_molecules = sort_molecules_by_similarity(ref_mol, mol_list)
+        sorted_smiles = [Chem.MolToSmiles(mol) for mol in sorted_molecules]
+        return sorted_smiles
